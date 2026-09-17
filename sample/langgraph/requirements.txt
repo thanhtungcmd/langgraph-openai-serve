@@ -1,4 +1,4 @@
 fastapi[standard]>=0.121.0
-langchain-openai>=1.2.1
+langchain-anthropic>=1.2.0
 langgraph>=1.1.10,<2.0.0
-langgraph-openai-serve>=0.18.0
+langgraph-openai-serve==0.18.0

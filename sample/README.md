@@ -3,19 +3,25 @@
 This sample runs a small LangGraph application behind LGOS's OpenAI-compatible
 `/v1` API and connects Open WebUI to it. The graph is based on
 `demo/api/src/lgos_demo_api/graphs/simple.py`: it sends the latest user message
-to an OpenAI-compatible model provider and streams the answer back.
+to Claude Haiku 4.5 through the Anthropic API and streams the answer back.
+
+The sample pins its LGOS dependency because graph streaming configuration is a
+package API and must remain compatible with the graph source in this directory.
 
 ## Run it
 
-1. Create the local configuration and supply a real model-provider API key:
+1. Create the local configuration and supply Anthropic API credentials:
 
    ```bash
    cd sample
    cp .env.example .env
    ```
 
-   Edit `.env` and set `OPENAI_API_KEY`. Change `OPENAI_BASE_URL` and
-   `OPENAI_MODEL` when using another OpenAI-compatible provider.
+   Edit `.env` and set `ANTHROPIC_API_KEY` and `ANTHROPIC_WORKSPACE_ID`.
+   `ANTHROPIC_BASE_URL` defaults to `https://api.anthropic.com`; change it only
+   when using an Anthropic-compatible proxy. The default model is
+   `claude-haiku-4-5`; change `ANTHROPIC_MODEL` to select another model
+   available to your Anthropic workspace.
 
 2. Start the services:
 

@@ -4,7 +4,7 @@ import os
 from typing import Annotated, Literal, Sequence
 
 from langchain_core.messages import AIMessage, BaseMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langgraph.graph import END, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.runtime import Runtime
@@ -42,13 +42,16 @@ async def generate(
     state: AgentState,
     runtime: Runtime[SimpleContext],
 ) -> dict[str, list[AIMessage]]:
-    """Generate a response from the configured OpenAI-compatible provider."""
-    model = ChatOpenAI(
-        model=os.environ["OPENAI_MODEL"],
-        base_url=os.environ["OPENAI_BASE_URL"],
-        api_key=os.environ["OPENAI_API_KEY"],
+    """Generate a response from Claude through the Anthropic API."""
+    model = ChatAnthropic(
+        model=os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5"),
+        api_key=os.environ["ANTHROPIC_API_KEY"],
+        base_url=os.getenv("ANTHROPIC_BASE_URL"),
+        default_headers={
+            "anthropic-workspace-id": os.environ["ANTHROPIC_WORKSPACE_ID"],
+        },
+        max_tokens=1024,
         temperature=0.7,
-        streaming=True,
     )
     context = runtime.context or SimpleContext()
     messages = state.messages if context.use_history else state.messages[-1:]
