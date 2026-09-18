@@ -46,14 +46,19 @@ async def generate(state: ExternalToolsState) -> dict[str, list[AIMessage]]:
         default_headers={
             "anthropic-workspace-id": os.environ["ANTHROPIC_WORKSPACE_ID"],
         },
-        max_tokens=1024,
-        temperature=0.7,
+        max_tokens=4096,
+        temperature=0,
     )
     conversation = [
         SystemMessage(
             content=(
                 "You are a coding assistant. Use the supplied tools when they are "
-                "needed to inspect or change the user's workspace."
+                "needed to inspect or change the user's workspace. Before calling a "
+                "tool, inspect its input schema and provide every required argument. "
+                "A tool call missing a required argument is prohibited. For a write "
+                "tool, compose the complete file contents before calling it and send "
+                "both `path` and a non-empty `content`. For a shell or execute tool, "
+                "send a non-empty `command`."
             )
         ),
         *state.messages,
