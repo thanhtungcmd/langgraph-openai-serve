@@ -1,7 +1,7 @@
 # LangGraph + Open WebUI with Docker Compose
 
 This sample runs a small LangGraph application behind LGOS's OpenAI-compatible
-`/v1` API and connects Open WebUI to it. The graph is based on
+`/v1` API and connects Open WebUI and an optional OpenCode coding agent to it. The graph is based on
 `demo/api/src/lgos_demo_api/graphs/simple.py`: it sends the latest user message
 to Claude Haiku 4.5 through the Anthropic API and streams the answer back.
 
@@ -42,13 +42,34 @@ curl http://localhost:8000/v1/models
 Stop the stack with `docker compose down`. Add `--volumes` to also remove Open
 WebUI's locally stored accounts and conversations.
 
+## Run OpenCode
+
+The optional OpenCode profile uses the `simple-graph-external-tools` model. Its
+tool loop stays in OpenCode: it reads and changes the repository mounted at
+`/workspace`, while LangGraph selects function calls through the standard
+OpenAI Chat Completions API.
+
+Start the LangGraph service, then run the interactive agent:
+
+```bash
+docker compose up --build -d langgraph
+docker compose run --rm opencode
+```
+
+OpenCode is configured to use `lgos/simple-graph-external-tools`. The default
+mount is the repository parent of `sample/`; any agent-approved file changes
+therefore affect your working copy. Set `OPENCODE_IMAGE` to use another pinned
+OpenCode image version.
+
 ## Architecture
 
 ```mermaid
 flowchart LR
     browser[Browser] --> ui[Open WebUI :3000]
     ui -->|OpenAI-compatible /v1| graph[LGOS + simple-graph :8000]
+    agent[OpenCode] -->|OpenAI-compatible /v1| tools[LGOS + simple-graph-external-tools :8000]
     graph --> provider[LLM provider]
+    tools --> provider
 ```
 
 Open WebUI uses the Docker service name `langgraph`, not `localhost`, to reach

@@ -157,6 +157,18 @@ async def test_stream_options_require_streaming(
         )
 
 
+async def test_store_is_accepted_for_chat_completion_clients(
+    openai_client: AsyncOpenAI,
+) -> None:
+    response = await openai_client.chat.completions.create(
+        model="test",
+        messages=[{"role": "user", "content": "Hi"}],
+        extra_body={"store": True},
+    )
+
+    assert response.choices[0].message.content == "hello"
+
+
 @pytest.mark.parametrize("stream", [False, True])
 @pytest.mark.parametrize(
     ("parameter", "value"),

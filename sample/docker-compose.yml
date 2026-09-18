@@ -39,5 +39,20 @@ services:
     volumes:
       - open-webui:/app/backend/data
 
+  opencode:
+    image: ${OPENCODE_IMAGE:-ghcr.io/anomalyco/opencode:2.0.0}
+    profiles: ["opencode"]
+    depends_on:
+      langgraph:
+        condition: service_healthy
+    environment:
+      OPENCODE_CONFIG: /config/opencode.json
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./opencode.json:/config/opencode.json:ro
+      - ..:/workspace
+
 volumes:
   open-webui:

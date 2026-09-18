@@ -99,6 +99,7 @@ class ChatCompletionRequest(BaseModel):
     messages: list[ChatCompletionRequestMessage] = Field(min_length=1)
     stream: bool | None = False
     stream_options: "ChatCompletionStreamOptions | None" = None
+    store: bool | None = None
     user: str | None = None
     tools: list[Tool] | None = None
     tool_choice: ChatToolChoice | None = None
