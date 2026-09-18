@@ -61,6 +61,13 @@ mount is the repository parent of `sample/`; any agent-approved file changes
 therefore affect your working copy. Set `OPENCODE_IMAGE` to use another pinned
 OpenCode image version.
 
+To use OpenCode on another project, set its absolute host path before starting
+the agent:
+
+```bash
+OPENCODE_WORKSPACE=/absolute/path/to/another-project docker compose run --rm opencode
+```
+
 ## Architecture
 
 ```mermaid

@@ -82,6 +82,16 @@ repository được mount vào container tại `/workspace`.
 Đổi phiên bản image OpenCode bằng `OPENCODE_IMAGE` trong `.env`, sau đó chạy
 lại lệnh `docker compose run --rm opencode`.
 
+Để dùng agent với một dự án khác, đặt đường dẫn tuyệt đối của dự án trên host
+vào `OPENCODE_WORKSPACE`:
+
+```bash
+OPENCODE_WORKSPACE=/absolute/path/to/another-project docker compose run --rm opencode
+```
+
+Thư mục đó được mount tại `/workspace` trong container; agent có thể đọc và
+thay đổi các file trong phạm vi mount này.
+
 ## Khắc phục sự cố
 
 ### `ModuleNotFoundError: No module named 'external_tools'`

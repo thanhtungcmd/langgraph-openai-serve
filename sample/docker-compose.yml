@@ -52,7 +52,7 @@ services:
     tty: true
     volumes:
       - ./opencode.json:/config/opencode.json:ro
-      - ..:/workspace
+      - ${OPENCODE_WORKSPACE:-..}:/workspace
 
 volumes:
   open-webui:
